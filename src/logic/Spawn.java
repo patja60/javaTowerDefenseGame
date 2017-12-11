@@ -25,7 +25,7 @@ public class Spawn {
 			{50,50,50,50},
 			{50,50,50,50}	};
 	/*private int[][] time = 	
-		{	{1,0,0,0},
+		{	{0,0,0,0},
 			{0,0,0,0},
 			{0,0,0,0}	};*/
 	private double[][] freq = 
@@ -160,13 +160,15 @@ public class Spawn {
 						}
 						if((gameLogic.getNow()-delayEnd)/1000000000>10) {
 							int nextStage = field.getFIELD_NUMBER();
-							if(nextStage+1>time.length) {
+							System.out.println(nextStage+1);
+							if(nextStage+1>=time.length) {
+								System.out.println("gameend");
 								// check if it is the last stage then go to main menu
 								gameLogic.setReset(true);
 								gameLogic.gameState = STATE.GameEnd;
 								return;
 							}
-							field.setFIELD_NUMBER(nextStage);
+							field.setFIELD_NUMBER(nextStage+1);
 							gameLogic.getFieldOption().destroyField();
 							gameLogic.setWave(1);
 							RenderableHolder.state = "loading";

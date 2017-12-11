@@ -39,7 +39,7 @@ public class GameLogic {
 		RenderableHolder.getInstance().add(fieldOption);
 		this.reset = false;
 		this.isPause = false;
-		this.health = 1000;
+		this.health = 20;
 		this.wave = 1;
 	}
 	
