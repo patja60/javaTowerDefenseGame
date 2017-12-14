@@ -75,7 +75,7 @@ public class Main extends Application {
 		endScreen.getChildren().add(end);
 		Scene scene5 = new Scene(endScreen);
 		
-		stage.setTitle("TD");
+		stage.setTitle("METAQAUR");
 		stage.setScene(scene3);
 		stage.show();
 		stage.setResizable(false);
