@@ -1,31 +1,19 @@
 package logic;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
-
-import com.sun.javafx.image.AlphaType;
-
-import input.CollidableEntity;
+import input.OverridableEntity;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import sharedObject.RenderableHolder;
 
-public class StraightEntity extends CollidableEntity{
+public class StraightEntity extends OverridableEntity{
 	private GameLogic gameLogic;
 	private String direction;
-	private int width = 25;
+	private int width;
 	private double damage;
 	
 	public StraightEntity(int x, int y, String direction, GameLogic gameLogic) {
-		this.speed = 30;
+		this.z = 15;
 		if(direction == "l") {
 			this.x = 0;
 			this.y = y;
@@ -39,6 +27,7 @@ public class StraightEntity extends CollidableEntity{
 		}
 		this.direction = direction;
 		this.gameLogic = gameLogic;
+		this.width = 25;
 	}
 
 	@Override
@@ -51,7 +40,7 @@ public class StraightEntity extends CollidableEntity{
 			for(Entity x : gameLogic.getGameObjectContainer()) {
 				if(x instanceof Creep) {
 					Creep o = (Creep)x;
-					if(collideWith(o)){
+					if(overrideWith(o)){
 						if(o.x>comp) {
 							a = (Creep)x;
 							comp = o.x+25;
@@ -72,7 +61,7 @@ public class StraightEntity extends CollidableEntity{
 			for(Entity x : gameLogic.getGameObjectContainer()) {
 				if(x instanceof Creep) {
 					Creep o = (Creep)x;
-					if(collideWith(o)){
+					if(overrideWith(o)){
 						if(o.x<comp) {
 							a = (Creep)x;
 							comp = o.x+25;
@@ -136,12 +125,6 @@ public class StraightEntity extends CollidableEntity{
 			break;
 		}
 		return r;
-	}
-
-	@Override
-	public int getZ() {
-		// TODO Auto-generated method stub
-		return 15;
 	}
 
 	public void setDamage(double damage) {

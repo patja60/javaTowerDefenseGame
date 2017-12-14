@@ -19,14 +19,12 @@ import sharedObject.RenderableHolder;
 
 public class End extends javafx.scene.canvas.Canvas{
 	private GameLogic gameLogic;
-	private boolean soundBackButton;
 	private double delay;
 	
 	public  End(double width, double height,GameLogic gameLogic) {
 		super(width,height);
 		this.setVisible(true);
 		this.gameLogic = gameLogic;
-		this.soundBackButton = false;
 		this.delay = -1;
 	}
 	
@@ -36,7 +34,7 @@ public class End extends javafx.scene.canvas.Canvas{
 		}
 		if((gameLogic.getNow()-delay)/1000000000>10) {
 			gameLogic.setReset(true);
-			gameLogic.gameState = STATE.Menu;
+			gameLogic.setGameState(STATE.Menu);
 		}
 	}
 

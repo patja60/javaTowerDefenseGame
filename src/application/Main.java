@@ -1,6 +1,4 @@
 package application;
-	
-import java.lang.Thread.State;
 
 import drawing.Bar;
 import drawing.End;
@@ -10,21 +8,14 @@ import drawing.InfoWindow;
 import drawing.Loading;
 import drawing.Menu;
 import input.AudioUtility;
-import input.InputUtility;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
-import logic.Creep;
 import logic.GameLogic;
 import logic.GameLogic.STATE;
 import logic.MyException;
-import logic.Spawn;
-import sharedObject.IRenderable;
 import sharedObject.RenderableHolder;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -39,15 +30,15 @@ public class Main extends Application {
 	private Loading loading;
 	private GameScreen gameScreen;
 	private Help help;
-	InfoWindow infoWindow;
-	HBox body;
-	VBox game;
-	Menu menu;
-	End end;
-	StackPane loadingScreen;
-	StackPane mainMenu;
-	StackPane helpScreen;
-	StackPane endScreen;
+	private InfoWindow infoWindow;
+	private HBox body;
+	private VBox game;
+	private Menu menu;
+	private End end;
+	private StackPane loadingScreen;
+	private StackPane mainMenu;
+	private StackPane helpScreen;
+	private StackPane endScreen;
 	private double delayTime = -1;
 	private Thread sound;
 	
@@ -90,8 +81,8 @@ public class Main extends Application {
 		stage.setResizable(false);
 		
 		sound = new Thread(()->{
-			while(gameLogic.gameState != STATE.End) {
-				if(RenderableHolder.state != "loading" && (gameLogic.gameState != STATE.GameOver && gameLogic.gameState != STATE.GameEnd)) {
+			while(gameLogic.getGameState() != STATE.End) {
+				if(RenderableHolder.state != "loading" && (gameLogic.getGameState() != STATE.GameOver && gameLogic.getGameState() != STATE.GameEnd)) {
 					AudioUtility.playSound("backGroundMusic");
 					try {
 						Thread.sleep(158000);
@@ -143,7 +134,7 @@ public class Main extends Application {
 					sound.interrupt();
 
 					try {
-						throw new MyException(gameLogic.gameState);
+						throw new MyException(gameLogic.getGameState());
 					} catch (MyException e) {
 						System.out.println(e.message());
 					}
@@ -154,12 +145,12 @@ public class Main extends Application {
 					if((now-delayTime)/1000000000>5) {
 						delayTime = -1;
 						gameLogic.setReset(true);
-						gameLogic.gameState = STATE.Menu;
+						gameLogic.setGameState(STATE.Menu);
 					}
 				}
 				if(bar.isBackHome()){
 					gameLogic.setReset(true);
-					gameLogic.gameState = STATE.Menu;
+					gameLogic.setGameState(STATE.Menu);
 				}
 				 
 				if(RenderableHolder.state == "loading") {
@@ -167,11 +158,11 @@ public class Main extends Application {
 					loading.tick();
 					loading.paintComponent();
 				}else if(RenderableHolder.state == "finish"){
-					gameLogic.gameState = STATE.Menu;
+					gameLogic.setGameState(STATE.Menu);
 					RenderableHolder.state = "dead";
 				}
 				
-				if(gameLogic.gameState == STATE.LoadingStage) {
+				if(gameLogic.getGameState() == STATE.LoadingStage) {
 					stage.setScene(scene3);
 					loading.paintComponent();
 				}
@@ -186,24 +177,23 @@ public class Main extends Application {
 					currentTime = now;
 					gameLogic.setNow(now-gap);
 				}
-				if(gameLogic.gameState == STATE.Menu) {
+				if(gameLogic.getGameState() == STATE.Menu) {
 					stage.setScene(scene1);
 					menu.tick();
 					menu.paintComponent();
-				}else if(gameLogic.gameState == STATE.Game){
+				}else if(gameLogic.getGameState() == STATE.Game){
 					stage.setScene(scene2);
 					bar.tick();
 					bar.paintComponent();
 					gameScreen.paintComponent();
-					infoWindow.tick();
 					infoWindow.paintComponent();
 					gameLogic.getSpawn().tick();
 					gameLogic.getFieldOption().tick();
-				}else if(gameLogic.gameState == STATE.Help){
+				}else if(gameLogic.getGameState() == STATE.Help){
 					stage.setScene(scene4);
 					help.tick();
 					help.paintComponent();
-				}else if(gameLogic.gameState == STATE.GameEnd){
+				}else if(gameLogic.getGameState() == STATE.GameEnd){
 					sound.interrupt();
 					AudioUtility.stopSound("backGroundMusic");
 					stage.setScene(scene5);
@@ -220,7 +210,7 @@ public class Main extends Application {
 	
 	@Override
 	public void stop() {
-		gameLogic.gameState = STATE.End;
+		gameLogic.setGameState(STATE.End);
 		AudioUtility.stopSound("backGroundMusic");
 		sound.interrupt();
 	}

@@ -17,6 +17,7 @@ public abstract class Tower extends Entity {
 		this.attackLevel = attackLevel;
 		this.speed = speed;
 		this.gameLogic = gameLogic;
+		this.z = 5;
 	}
 	
 	public abstract List towerData();

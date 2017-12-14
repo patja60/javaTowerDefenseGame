@@ -23,11 +23,10 @@ public class GameLogic {
 	private int stage;
 	private int health;
 	private boolean gameOver;
-	
 	public enum STATE{
 		Menu,PickStage,Game,Loading,LoadingStage,End,GameOver,Help,GameEnd
 	};
-	public static STATE gameState = STATE.Loading;
+	private static STATE gameState = STATE.Loading;
 	
 	public GameLogic() {
 		this.gameObjectContainer = new ArrayList<Entity>();
@@ -44,7 +43,6 @@ public class GameLogic {
 	}
 	
 	public void logicUpdate() {
-		
 		if(gameState == STATE.Game) {
 			if(!isPause) {
 				for(int i = gameObjectContainer.size()-1 ; i >= 0 ; i--) {
@@ -159,6 +157,13 @@ public class GameLogic {
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
-	
+
+	public static STATE getGameState() {
+		return gameState;
+	}
+
+	public static void setGameState(STATE gameState) {
+		GameLogic.gameState = gameState;
+	}
 	
 }

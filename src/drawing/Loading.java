@@ -1,10 +1,6 @@
 package drawing;
 
-import java.awt.Button;
-import java.awt.Canvas;
-
 import input.InputUtility;
-import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -19,21 +15,23 @@ import sharedObject.RenderableHolder;
 
 public class Loading extends javafx.scene.canvas.Canvas{
 	private GameLogic gameLogic;
-	private int deg1 = 5;
-	private int deg2 = 4;
-	private int deg3 = 3;
+	private int deg1;
+	private int deg2;
+	private int deg3;
 	private int count;
-	private long currntTime;
+	private long textTime;
 	private long loadingTime;
 	
 	public Loading(double width, double height,GameLogic gameLogic) {
 		super(width,height);
 		this.setVisible(true);
 		this.gameLogic = gameLogic;
-		addListerner();
-		currntTime = -1;
-		loadingTime = -1;
-		count = 1;
+		this.textTime = -1;
+		this.loadingTime = -1;
+		this.count = 1;
+		this.deg1 = 5;
+		this.deg2 = 4;
+		this.deg3 = 3;
 	}
 	
 	public void tick() {
@@ -48,10 +46,9 @@ public class Loading extends javafx.scene.canvas.Canvas{
 						o.setDestroy();
 					}
 				}
-				System.out.println("done");
-				gameLogic.gameState = STATE.Game;
+				gameLogic.setGameState(STATE.Game);
 				loadingTime = -1;
-				currntTime = -1;
+				textTime = -1;
 				RenderableHolder.state = "dead";
 			}
 		}
@@ -59,8 +56,8 @@ public class Loading extends javafx.scene.canvas.Canvas{
 
 	
 	public void paintComponent() {
-		if(currntTime < 0) {
-			currntTime = gameLogic.getNow();
+		if(textTime < 0) {
+			textTime = gameLogic.getNow();
 		}
 		paintLoadingScreen();
 		paintText(gameLogic.getNextStage());
@@ -98,12 +95,12 @@ public class Loading extends javafx.scene.canvas.Canvas{
 		Font theFont = Font.font("Times New Roman", FontWeight.LIGHT, 30);
 		gc.setFont(theFont);
 		gc.setFill(Color.WHITE);
-		if((gameLogic.getNow()-currntTime)/1000000000>0.5) {
+		if((gameLogic.getNow()-textTime)/1000000000>0.5) {
 			count++;
 			if(count > 3) {
 				count = 1;
 			}
-			currntTime = gameLogic.getNow();
+			textTime = gameLogic.getNow();
 		}
 		
 		switch (count) {
@@ -131,50 +128,6 @@ public class Loading extends javafx.scene.canvas.Canvas{
 			}
 			break;
 		}
-	}
-	
-	public void addListerner() {
-		this.setOnMousePressed((MouseEvent event) -> {
-			if (event.getButton() == MouseButton.PRIMARY) {
-				System.out.println("Click");
-				InputUtility.mouseLeftDown();
-			}else if (event.getButton() == MouseButton.SECONDARY) {
-				System.out.println("Click");
-				InputUtility.mouseRightDown();
-			}
-		});
-
-		this.setOnMouseReleased((MouseEvent event) -> {
-			if (event.getButton() == MouseButton.PRIMARY) {
-				System.out.println("Release");
-				InputUtility.mouseLeftRelease();
-			}else if (event.getButton() == MouseButton.SECONDARY) {
-				System.out.println("Release");
-				InputUtility.mouseRightRelease();
-			}
-		});
-
-		this.setOnMouseEntered((MouseEvent event) -> {
-			InputUtility.mouseOnMenu = true;
-		});
-
-		this.setOnMouseExited((MouseEvent event) -> {
-			InputUtility.mouseOnMenu = false;
-		});
-
-		this.setOnMouseMoved((MouseEvent event) -> {
-			if (InputUtility.mouseOnMenu) {
-				InputUtility.mouseX = event.getX();
-				InputUtility.mouseY = event.getY();
-			}
-		});
-
-		this.setOnMouseDragged((MouseEvent event) -> {
-			if (InputUtility.mouseOnMenu) {
-				InputUtility.mouseX = event.getX();
-				InputUtility.mouseY = event.getY();
-			}
-		});
 	}
 	
 }

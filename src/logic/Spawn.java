@@ -1,15 +1,9 @@
 package logic;
 
-import java.lang.Thread.State;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.util.Pair;
 import logic.GameLogic.STATE;
 import sharedObject.RenderableHolder;
@@ -20,27 +14,23 @@ public class Spawn {
 	private Field field;
 	private int x;
 	private int y;
-	private int[][] time = 	
+	private static final int[][] TIME = 	
 		{	{50,50,50,50},
 			{50,50,50,50},
 			{50,50,50,50}	};
-	/*private int[][] time = 	
-		{	{0,0,0,0},
-			{0,0,0,0},
-			{0,0,0,0}	};*/
-	private double[][] freq = 
+	private static final double[][] FREQ = 
 		{	{2,3,2,7},
 			{1,2,3,2},
 			{2,1,2,2}	};
-	private int[] money = {50,140,400};
+	private static final int[] MONEY = {50,140,400};
 	private int waveTime;
-	private boolean isWaveStart;
-	private boolean isStageClear;
-	private int count = 5;
-	private boolean draw;
-	private boolean firstWave;
+	private int count;
 	private double currentTime;
 	private double delayEnd;
+	private boolean isWaveStart;
+	private boolean isStageClear;
+	private boolean draw;
+	private boolean firstWave;
 	private Creep currentCreep;
 	
 	public Spawn(GameLogic gameLogic,Field field){
@@ -51,6 +41,7 @@ public class Spawn {
 		this.firstWave = true;
 		this.delayEnd = -1;
 		this.isStageClear = false;
+		this.count = 5;
 	}
 	
 	public void tick(){
@@ -58,14 +49,14 @@ public class Spawn {
 			gameLogic.setTime((int)(waveTime-gameLogic.getNow()/1000000000));
 		}else {
 			try {
-				gameLogic.setTime(time[field.getFIELD_NUMBER()][gameLogic.getWave()-1]);
+				gameLogic.setTime(TIME[field.getFieldNumber()][gameLogic.getWave()-1]);
 			}catch(ArrayIndexOutOfBoundsException e) {		
 			}
 		}
 		x = findStart().getKey();
 		y = findStart().getValue();
 		
-		if(gameLogic.gameState == STATE.Game) {
+		if(gameLogic.getGameState() == STATE.Game) {
 			//assign current time
 			if(currentTime<0) {
 				currentTime = gameLogic.getNow();
@@ -74,14 +65,14 @@ public class Spawn {
 				// do set up and count part
 				if(firstWave) {
 					// if it wave 1 set money and stage
-					gameLogic.setMoney(money[field.getFIELD_NUMBER()]);
-					gameLogic.setStage(field.getFIELD_NUMBER());
+					gameLogic.setMoney(MONEY[field.getFieldNumber()]);
+					gameLogic.setStage(field.getFieldNumber());
 					firstWave = false;
 					//currentTime = gameLogic.getNow();
 				}else {
 					
 					// set current creep
-					switch (field.getFIELD_NUMBER()) {
+					switch (field.getFieldNumber()) {
 					case 0:
 						switch(gameLogic.getWave()) {
 						
@@ -150,7 +141,7 @@ public class Spawn {
 					}
 					
 					// check if it is the last wave do end part, else count 3-2-1 for next wave
-					if(gameLogic.getWave()-1>=time[field.getFIELD_NUMBER()].length) {
+					if(gameLogic.getWave()-1>=TIME[field.getFieldNumber()].length) {
 						// end part
 						if(delayEnd<0) {
 							delayEnd = gameLogic.getNow();
@@ -159,16 +150,16 @@ public class Spawn {
 							isStageClear = true;
 						}
 						if((gameLogic.getNow()-delayEnd)/1000000000>10) {
-							int nextStage = field.getFIELD_NUMBER();
+							int nextStage = field.getFieldNumber();
 							System.out.println(nextStage+1);
-							if(nextStage+1>=time.length) {
+							if(nextStage+1>=TIME.length) {
 								System.out.println("gameend");
 								// check if it is the last stage then go to main menu
 								gameLogic.setReset(true);
-								gameLogic.gameState = STATE.GameEnd;
+								gameLogic.setGameState(STATE.GameEnd);
 								return;
 							}
-							field.setFIELD_NUMBER(nextStage+1);
+							field.setFieldNumber(nextStage+1);
 							gameLogic.getFieldOption().destroyField();
 							gameLogic.setWave(1);
 							RenderableHolder.state = "loading";
@@ -183,7 +174,7 @@ public class Spawn {
 							draw = true;
 							count--;
 							if(count<=0) {
-								waveTime = (int)(gameLogic.getNow()/1000000000+time[field.getFIELD_NUMBER()][gameLogic.getWave()-1]);
+								waveTime = (int)(gameLogic.getNow()/1000000000+TIME[field.getFieldNumber()][gameLogic.getWave()-1]);
 								isWaveStart = true;
 								draw = false;
 								count = 5;
@@ -195,9 +186,9 @@ public class Spawn {
 			}else {
 				//check if it in wave time send creep part, else set waveStart to false then do end part
 				if(waveTime>=gameLogic.getNow()/1000000000) {
-					if((gameLogic.getNow()-currentTime)/1000000000>freq[field.getFIELD_NUMBER()][gameLogic.getWave()-1]) {
+					if((gameLogic.getNow()-currentTime)/1000000000>FREQ[field.getFieldNumber()][gameLogic.getWave()-1]) {
 						
-						switch (field.getFIELD_NUMBER()) {
+						switch (field.getFieldNumber()) {
 						case 0:
 							switch(gameLogic.getWave()) {
 							
@@ -310,9 +301,9 @@ public class Spawn {
 
 	private Pair<Integer,Integer> findStart() {
 		Pair<Integer, Integer> o = new Pair<Integer, Integer>(-1,-1);
-		for(int x = 0 ; x < field.getFIELD()[field.getFIELD_NUMBER()][0].length ; x++) {
-			for (int y = 0; y < field.getFIELD()[field.getFIELD_NUMBER()].length; y++) {
-				if(field.getFIELD()[field.getFIELD_NUMBER()][y][x] == -8) {
+		for(int x = 0 ; x < field.getFieldMap()[field.getFieldNumber()][0].length ; x++) {
+			for (int y = 0; y < field.getFieldMap()[field.getFieldNumber()].length; y++) {
+				if(field.getFieldMap()[field.getFieldNumber()][y][x] == -8) {
 					o = new Pair<Integer, Integer>(x,y);
 					return o;
 				}
@@ -323,9 +314,9 @@ public class Spawn {
 
 	public Pair<Integer,Integer> findEnd() {
 		Pair<Integer, Integer> o = new Pair<Integer, Integer>(-1,-1);
-		for(int x = 0 ; x < field.getFIELD()[field.getFIELD_NUMBER()][0].length ; x++) {
-			for (int y = 0; y < field.getFIELD()[field.getFIELD_NUMBER()].length; y++) {
-				if(field.getFIELD()[field.getFIELD_NUMBER()][y][x] == -9) {
+		for(int x = 0 ; x < field.getFieldMap()[field.getFieldNumber()][0].length ; x++) {
+			for (int y = 0; y < field.getFieldMap()[field.getFieldNumber()].length; y++) {
+				if(field.getFieldMap()[field.getFieldNumber()][y][x] == -9) {
 					o = new Pair<Integer, Integer>(x,y);
 					return o;
 				}
@@ -335,7 +326,7 @@ public class Spawn {
 	}
 	
 	public List<Integer> getPath() {
-		List<Integer> list = getPath(field.getFIELD_NUMBER(), x, y, null);
+		List<Integer> list = getPath(field.getFieldNumber(), x, y, null);
 		for(int i = 0 ; i < list.size()-1 ; i++) {
 			if(list.get(i)-list.get(i+1)==-1  || list.get(i)-list.get(i+1)==3)  {
 				list.add(i+1, -1); // turn right
@@ -350,7 +341,7 @@ public class Spawn {
 	
 	public List<Integer> getPath(int fieldNumber,int x,int y,String from){
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][y-1][x] == -9 ) {
+			if(field.getFieldMap()[field.getFieldNumber()][y-1][x] == -9 ) {
 				 List<Integer> out = new ArrayList<>();
 				 out.add(1);
 				 return out;
@@ -359,7 +350,7 @@ public class Spawn {
 		}
 		
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][y][x-1] == -9) {
+			if(field.getFieldMap()[field.getFieldNumber()][y][x-1] == -9) {
 				 List<Integer> out = new ArrayList<>();
 				 out.add(4);
 				 return out;
@@ -368,7 +359,7 @@ public class Spawn {
 		}
 		
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][y+1][x] == -9) {
+			if(field.getFieldMap()[field.getFieldNumber()][y+1][x] == -9) {
 				 List<Integer> out = new ArrayList<>();
 				 out.add(3);
 				 return out;
@@ -377,7 +368,7 @@ public class Spawn {
 		}
 		
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][y][x+1] == -9) {
+			if(field.getFieldMap()[field.getFieldNumber()][y][x+1] == -9) {
 				 List<Integer> out = new ArrayList<>();
 				 out.add(2);
 				 return out;
@@ -388,7 +379,7 @@ public class Spawn {
 		
 		
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][y-1][x] == 0 && from != "U") {
+			if(field.getFieldMap()[field.getFieldNumber()][y-1][x] == 0 && from != "U") {
 				 from = "D";
 				 List<Integer> out = new ArrayList<>();
 				 out.add(1);
@@ -399,7 +390,7 @@ public class Spawn {
 		}
 		
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][y][x-1] == 0 && from != "L") {
+			if(field.getFieldMap()[field.getFieldNumber()][y][x-1] == 0 && from != "L") {
 				 from = "R";
 				 List<Integer> out = new ArrayList<>();
 				 out.add(4);
@@ -410,7 +401,7 @@ public class Spawn {
 		}
 		
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][y+1][x] == 0 && from != "D") {
+			if(field.getFieldMap()[field.getFieldNumber()][y+1][x] == 0 && from != "D") {
 				 from = "U";
 				 List<Integer> out = new ArrayList<>();
 				 out.add(3);
@@ -421,7 +412,7 @@ public class Spawn {
 		}
 		
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][y][x+1] == 0 && from != "R") {
+			if(field.getFieldMap()[field.getFieldNumber()][y][x+1] == 0 && from != "R") {
 				 from = "L";
 				 List<Integer> out = new ArrayList<>();
 				 out.add(2);
@@ -437,10 +428,10 @@ public class Spawn {
 	
 	private int findPath(int x, int y) {
 		try {
-			if(field.getFIELD()[field.getFIELD_NUMBER()][x][y-1] == 0) return 1;
-			if(field.getFIELD()[field.getFIELD_NUMBER()][x-1][y] == 0) return 2;
-			if(field.getFIELD()[field.getFIELD_NUMBER()][x][y+1] == 0) return 3;
-			if(field.getFIELD()[field.getFIELD_NUMBER()][x+1][y] == 0) return 4;
+			if(field.getFieldMap()[field.getFieldNumber()][x][y-1] == 0) return 1;
+			if(field.getFieldMap()[field.getFieldNumber()][x-1][y] == 0) return 2;
+			if(field.getFieldMap()[field.getFieldNumber()][x][y+1] == 0) return 3;
+			if(field.getFieldMap()[field.getFieldNumber()][x+1][y] == 0) return 4;
 			
 		}catch (IndexOutOfBoundsException e) {
 			

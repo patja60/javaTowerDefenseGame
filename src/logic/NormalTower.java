@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import sharedObject.RenderableHolder;
 
 public class NormalTower extends Tower{
-	private List<OrbitEntity> orbitEntities;
 	public static final int price = 10;
+	private List<OrbitEntity> orbitEntities;
 	
 	public NormalTower(int x, int y,GameLogic gameLogic, double speed, int amount, int attackLevel) {
 		super(x,y,gameLogic,speed,amount,attackLevel);
 		this.orbitEntities = new ArrayList<>();
-		
 		addOrbitEntities();
 		setAttackLevel(attackLevel);
 	}
@@ -100,10 +98,6 @@ public class NormalTower extends Tower{
 		return list;
 	}
 	
-	public int getZ() {
-		return 5;
-	}
-	
 	public int getUpgradeAmountPrice(int upgradelevel) {
 		int price = 0;
 		switch (upgradelevel) {
@@ -131,5 +125,4 @@ public class NormalTower extends Tower{
 		}
 		return price;
 	}
-
 }

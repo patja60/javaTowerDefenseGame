@@ -34,11 +34,10 @@ public class Menu extends javafx.scene.canvas.Canvas{
 	public void tick(){
 		if(InputUtility.mouseOnMenu) {
 			if(InputUtility.isLeftClickRelease() && onPlayButton()) {
-				gameLogic.gameState = STATE.Game;
-				AudioUtility.playSound("clickSound");
+				gameLogic.setGameState(STATE.Game);
 			}
 			if(InputUtility.isLeftClickRelease() && onHelpButton()) {
-				gameLogic.gameState = STATE.Help;
+				gameLogic.setGameState(STATE.Help);
 				AudioUtility.playSound("clickSound");
 			}
 			InputUtility.updateInputState();

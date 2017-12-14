@@ -1,21 +1,18 @@
 package logic;
 
-import java.util.List;
 
 import input.InputUtility;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.util.Pair;
-import logic.GameLogic.STATE;
 import sharedObject.IRenderable;
 import sharedObject.RenderableHolder;
 
 public class FieldOption implements IRenderable{
 
 	private GameLogic gameLogic;
-	private static Tower[][] tower;
+	private Tower[][] tower;
 	private int fieldOnX;
 	private int fieldOnY;
 	
@@ -25,9 +22,6 @@ public class FieldOption implements IRenderable{
 	
 	private int upgradX;
 	private int upgradY;
-	
-	private double mouseX;
-	private double mouseY;
 	
 	private int circleOptionDimension;
 	
@@ -52,26 +46,26 @@ public class FieldOption implements IRenderable{
 					upgradX = -1;
 					upgradY = -1;
 					}
-				if(getField(InputUtility.mouseX, InputUtility.mouseY) == 2 || getField(InputUtility.mouseX, InputUtility.mouseY) == 3
-						|| getField(InputUtility.mouseX, InputUtility.mouseY) == 4 || getField(InputUtility.mouseX, InputUtility.mouseY) == 5) {
+				if(getFieldType(InputUtility.mouseX, InputUtility.mouseY) == 2 || getFieldType(InputUtility.mouseX, InputUtility.mouseY) == 3
+						|| getFieldType(InputUtility.mouseX, InputUtility.mouseY) == 4 || getFieldType(InputUtility.mouseX, InputUtility.mouseY) == 5) {
 					if(!buildMode) {
 						fieldOnX = (int)(InputUtility.mouseX/Field.SIZE);
 						fieldOnY = (int)(InputUtility.mouseY/Field.SIZE);
-						if(InputUtility.isLeftClickRelease()&& gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][fieldOnY][fieldOnX] == 2) {
+						if(InputUtility.isLeftClickRelease()&& gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][fieldOnY][fieldOnX] == 2) {
 							buildMode = true;
 							build = "tower";
 							showUpgrade(fieldOnX, fieldOnY);
-						}else if(InputUtility.isLeftClickRelease() && gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][fieldOnY][fieldOnX] == 3) {
+						}else if(InputUtility.isLeftClickRelease() && gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][fieldOnY][fieldOnX] == 3) {
 							NormalTower o = (NormalTower)tower[fieldOnY][fieldOnX];
 							buildMode = true;
 							build = "normalTower";
 							showUpgrade(fieldOnX, fieldOnY);
-						}else if(InputUtility.isLeftClickRelease() && gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][fieldOnY][fieldOnX] == 4) {
+						}else if(InputUtility.isLeftClickRelease() && gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][fieldOnY][fieldOnX] == 4) {
 							IceTower o = (IceTower)tower[fieldOnY][fieldOnX];
 							buildMode = true;
 							build = "iceTower";
 							showUpgrade(fieldOnX, fieldOnY);
-						}else if(InputUtility.isLeftClickRelease() && gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][fieldOnY][fieldOnX] == 5) {
+						}else if(InputUtility.isLeftClickRelease() && gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][fieldOnY][fieldOnX] == 5) {
 							LaserTower o = (LaserTower)tower[fieldOnY][fieldOnX];
 							buildMode = true;
 							build = "laserTower";
@@ -98,7 +92,7 @@ public class FieldOption implements IRenderable{
 								if(gameLogic.getMoney() >= NormalTower.price) {
 									NormalTower o = new NormalTower(upgradX*Field.SIZE, upgradY*Field.SIZE, gameLogic, 3, 1, 1);
 									tower[fieldOnY][fieldOnX] = o;
-									gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][fieldOnY][fieldOnX] = 3;
+									gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][fieldOnY][fieldOnX] = 3;
 									gameLogic.addNewObject(o);
 									gameLogic.setMoney(gameLogic.getMoney() - NormalTower.price);
 									buildMode = false;
@@ -110,7 +104,7 @@ public class FieldOption implements IRenderable{
 								if(gameLogic.getMoney() >= IceTower.price) {
 									IceTower o = new IceTower(upgradX*Field.SIZE, upgradY*Field.SIZE, gameLogic, 3, 1, 1, 1);
 									tower[fieldOnY][fieldOnX] = o;
-									gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][fieldOnY][fieldOnX] = 4;
+									gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][fieldOnY][fieldOnX] = 4;
 									gameLogic.addNewObject(o);
 									gameLogic.setMoney(gameLogic.getMoney() - IceTower.price);
 									buildMode = false;
@@ -139,7 +133,7 @@ public class FieldOption implements IRenderable{
 										o.destroyTower();
 										o = new NormalTower(upgradX*Field.SIZE, upgradY*Field.SIZE, gameLogic, 3, amount, attackLevel);
 										tower[fieldOnY][fieldOnX] = o;
-										gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][fieldOnY][fieldOnX] = 3;
+										gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][fieldOnY][fieldOnX] = 3;
 										gameLogic.addNewObject(o);
 										buildMode = false;
 										build = "";
@@ -216,7 +210,7 @@ public class FieldOption implements IRenderable{
 							}
 							if(laserTower != ""){
 								tower[fieldOnY][fieldOnX] = o;
-								gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][fieldOnY][fieldOnX] = 5;
+								gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][fieldOnY][fieldOnX] = 5;
 								gameLogic.setMoney(gameLogic.getMoney() - LaserTower.price);
 								gameLogic.addNewObject(o);
 								buildMode = false;
@@ -257,10 +251,10 @@ public class FieldOption implements IRenderable{
 		Font theFont = Font.font("Times New Roman", FontWeight.LIGHT, 20);
 		gc.setFont(theFont);
 		
-		if((getField(InputUtility.mouseX, InputUtility.mouseY) == 2 || 
-				getField(InputUtility.mouseX, InputUtility.mouseY) == 3 ||
-				getField(InputUtility.mouseX, InputUtility.mouseY) == 4 ||
-				getField(InputUtility.mouseX, InputUtility.mouseY) == 5) && !buildMode) {
+		if((getFieldType(InputUtility.mouseX, InputUtility.mouseY) == 2 || 
+				getFieldType(InputUtility.mouseX, InputUtility.mouseY) == 3 ||
+				getFieldType(InputUtility.mouseX, InputUtility.mouseY) == 4 ||
+				getFieldType(InputUtility.mouseX, InputUtility.mouseY) == 5) && !buildMode) {
 			gc.setStroke(Color.WHITE);
 			gc.strokeRect(fieldOnX*Field.SIZE, fieldOnY*Field.SIZE, Field.SIZE, Field.SIZE);
 		}
@@ -348,9 +342,9 @@ public class FieldOption implements IRenderable{
 		upgradY = y;
 	}
 	
-	public int getField(double x, double y) {
+	public int getFieldType(double x, double y) {
 		try {
-			return gameLogic.getField().getFIELD()[gameLogic.getField().getFIELD_NUMBER()][(int)(y/Field.SIZE)][(int)(x/Field.SIZE)];
+			return gameLogic.getField().getFieldMap()[gameLogic.getField().getFieldNumber()][(int)(y/Field.SIZE)][(int)(x/Field.SIZE)];
 		}catch(Exception e) {
 			return 1;
 		}
@@ -362,21 +356,6 @@ public class FieldOption implements IRenderable{
 		}catch(IndexOutOfBoundsException e) {
 			return null;
 		}
-	}
-
-	@Override
-	public int getZ() {
-		return 20;
-	}
-
-	@Override
-	public boolean isDestroyed() {
-		return false;
-	}
-
-	@Override
-	public boolean isVisible() {
-		return true;
 	}
 	
 	public void destroyField() {
@@ -415,5 +394,20 @@ public class FieldOption implements IRenderable{
 		gc.setFill(Color.WHITE);
 		gc.fillText(price, x*Field.SIZE+34, y*Field.SIZE-2);
 		gc.setFont(theFont);
+	}
+	
+	@Override
+	public int getZ() {
+		return 20;
+	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
+	}
+
+	@Override
+	public boolean isVisible() {
+		return true;
 	}
 }

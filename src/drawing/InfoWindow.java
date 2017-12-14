@@ -81,10 +81,6 @@ public class InfoWindow extends Canvas{
 		gc.strokeRect(20, 20, 260, 200);
 	}
 	
-	public void tick(){
-		
-	}
-	
 	public void addListerner() {
 		this.setOnMousePressed((MouseEvent event) -> {
 			if (event.getButton() == MouseButton.PRIMARY) {

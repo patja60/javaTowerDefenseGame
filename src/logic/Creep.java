@@ -2,10 +2,9 @@ package logic;
 
 import java.util.List;
 
-import input.CollidableEntity;
-import javafx.scene.canvas.GraphicsContext;
+import input.OverridableEntity;
 
-public abstract class Creep extends CollidableEntity{
+public abstract class Creep extends OverridableEntity{
 	protected double hp;
 	protected double speed;
 	protected double maxSpeed;
@@ -33,6 +32,7 @@ public abstract class Creep extends CollidableEntity{
 		
 		this.spawn = spawn;
 		this.gameLogic = gameLogic;
+		this.z = 3;
 	}
 	
 	public abstract List creepData();
@@ -41,11 +41,6 @@ public abstract class Creep extends CollidableEntity{
 		if(val < min) this.hp = min;
 		if(val > max) this.hp = max;
 	}
-	
-	public int getZ() {
-		return 3;
-	}
-
 
 	public double getHp() {
 		return hp;

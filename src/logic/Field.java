@@ -1,22 +1,21 @@
 package logic;
 
-import input.InputUtility;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import sharedObject.IRenderable;
 import sharedObject.RenderableHolder;
 
 public class Field implements IRenderable {
 	private boolean destroyed;
-	private int FIELD_NUMBER;
+	private int fieldNumber;
 	public static final int SIZE = 50;
-	private int[][][] FIELD;
+	private int[][][] fieldMap;
 	private double deg;
+	
 	public Field() {
 		this.deg = 0;
 		this.destroyed = false;
-		this.FIELD_NUMBER = 0;
-		this.FIELD = new int[][][]{{
+		this.fieldNumber = 0;
+		this.fieldMap = new int[][][]{{
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, 
 			{ 1, 2, 2, 2, 2, 2,-9, 2, 2, 2, 1, 2, 2, 2, 2, 1 },
 			{ 1,-8, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 1, 1 }, 
@@ -63,10 +62,10 @@ public class Field implements IRenderable {
 		}};
 	}
 	public void draw(GraphicsContext gc) {
-		for (int x = 0; x <  FIELD[FIELD_NUMBER][0].length; x++) {
-			for (int y = 0; y <  FIELD[FIELD_NUMBER].length; y++) {
+		for (int x = 0; x <  fieldMap[fieldNumber][0].length; x++) {
+			for (int y = 0; y <  fieldMap[fieldNumber].length; y++) {
 				gc.drawImage(RenderableHolder.grass, x*SIZE, y*SIZE);
-				if( FIELD[FIELD_NUMBER][y][x] == -8 ||  FIELD[FIELD_NUMBER][y][x] == -9) {
+				if( fieldMap[fieldNumber][y][x] == -8 ||  fieldMap[fieldNumber][y][x] == -9) {
 					gc.drawImage(RenderableHolder.path, x*SIZE, y*SIZE);
 					gc.translate(x*SIZE + 25, y*SIZE + 25);
 					gc.rotate(deg);
@@ -74,13 +73,13 @@ public class Field implements IRenderable {
 					gc.rotate(-deg);
 					gc.translate(-(x*SIZE + 25), -(y*SIZE + 25));
 					deg += 1.5;
-				}else if( FIELD[FIELD_NUMBER][y][x] == 0) {
+				}else if( fieldMap[fieldNumber][y][x] == 0) {
 					gc.drawImage(RenderableHolder.path, x*SIZE, y*SIZE);
-				}else if( FIELD[FIELD_NUMBER][y][x] == -3) {
+				}else if( fieldMap[fieldNumber][y][x] == -3) {
 					gc.drawImage(RenderableHolder.rock, x*SIZE, y*SIZE);
-				}else if( FIELD[FIELD_NUMBER][y][x] == 1) {
+				}else if( fieldMap[fieldNumber][y][x] == 1) {
 					gc.drawImage(RenderableHolder.tree, x*SIZE, y*SIZE);
-				}else if( FIELD[FIELD_NUMBER][y][x] == 4) {
+				}else if( fieldMap[fieldNumber][y][x] == 4) {
 					
 				}
 			}
@@ -94,15 +93,6 @@ public class Field implements IRenderable {
 		
 	}
 	
-	public int getField(int x, int y) {
-		try {
-			y -= 60;
-			return FIELD[FIELD_NUMBER][(int)(y/SIZE)][(int)(x/SIZE)];
-		}catch(Exception e) {
-			return 1;
-		}
-	}
-	
 	public boolean isDestroyed() {
 		return destroyed;
 	}
@@ -111,16 +101,16 @@ public class Field implements IRenderable {
 		return true;
 	}
 	
-	public int getFIELD_NUMBER() {
-		return FIELD_NUMBER;
+	public int getFieldNumber() {
+		return fieldNumber;
 	}
 	
-	public void setFIELD_NUMBER(int fIELD_NUMBER) {
-		FIELD_NUMBER = fIELD_NUMBER;
+	public void setFieldNumber(int fIELD_NUMBER) {
+		fieldNumber = fIELD_NUMBER;
 	}
 	
-	public int[][][] getFIELD() {
-		return FIELD;
+	public int[][][] getFieldMap() {
+		return fieldMap;
 	}
 	
 	

@@ -1,20 +1,12 @@
 package drawing;
 
-import java.awt.Button;
-import java.awt.Canvas;
-
 import input.AudioUtility;
 import input.InputUtility;
-import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import logic.GameLogic;
 import logic.GameLogic.STATE;
-import sharedObject.IRenderable;
 import sharedObject.RenderableHolder;
 
 public class Help extends javafx.scene.canvas.Canvas{
@@ -32,7 +24,7 @@ public class Help extends javafx.scene.canvas.Canvas{
 	public void tick(){
 		if(InputUtility.mouseOnHelp) {
 			if(InputUtility.isLeftClickRelease() && onBackButton()) {
-				gameLogic.gameState = STATE.Menu;
+				gameLogic.setGameState(STATE.Menu);
 				AudioUtility.playSound("clickSound");
 			}
 			InputUtility.updateInputState();

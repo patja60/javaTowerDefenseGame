@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import sharedObject.RenderableHolder;
 
 public class IceTower extends Tower{
@@ -103,10 +102,6 @@ public class IceTower extends Tower{
 		list.add("speed level : " + this.attackLevel);
 		list.add("slow : " + Integer.toString((int)orbitEntities.get(0).getSlow()) + " %");
 		return list;
-	}
-	
-	public int getZ() {
-		return 5;
 	}
 	
 	public int getUpgradeSlowPrice(int upgradelevel) {

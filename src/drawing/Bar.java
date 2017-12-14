@@ -9,7 +9,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import logic.Field;
 import logic.GameLogic;
 import logic.GameLogic.STATE;
 import logic.MyException2;
@@ -18,8 +17,6 @@ import sharedObject.RenderableHolder;
 public class Bar extends Canvas{
 	private GameLogic gameLogic;
 	private boolean backHome;
-	private boolean soundPauseButton;
-	private boolean soundHomeButton;
 	
 	
 	public Bar(double width, double height, GameLogic gameLogic) {
@@ -28,14 +25,12 @@ public class Bar extends Canvas{
 		this.setVisible(true);
 		this.backHome = false;
 		this.gameLogic = gameLogic;
-		this.soundPauseButton = false;
-		this.soundHomeButton = false;
 	}
 	
 	public void tick(){
 		if(gameLogic.getHealth()<=0) {
 			gameLogic.setPause(true);
-			gameLogic.gameState = STATE.GameOver;
+			gameLogic.setGameState(STATE.GameOver);
 			gameLogic.setGameOver(true);
 			AudioUtility.playSound("gameOver");
 		}
@@ -96,10 +91,6 @@ public class Bar extends Canvas{
 	
 	public boolean onHomeButton() {
 		return (Math.abs(InputUtility.mouseX-(1005+35))<=35 && Math.abs(InputUtility.mouseY-(26+35))<=35);
-	}
-	
-	public boolean onResumeButton() {
-		return (InputUtility.mouseX > 950 && InputUtility.mouseX < 1000)&&(InputUtility.mouseY > 20 && InputUtility.mouseY < 70);
 	}
 
 	public boolean isBackHome() {

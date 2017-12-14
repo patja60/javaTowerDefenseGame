@@ -5,12 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.media.AudioClip;
-import logic.GameLogic;
-import logic.GameLogic.STATE;
 
 public class RenderableHolder {
 	private List<IRenderable> entities;
@@ -115,7 +112,6 @@ public class RenderableHolder {
 	
 	static {
 		Thread thread1 = new Thread(() -> {
-			//loadingCircle = new Image(ClassLoader.getSystemResource("loadingCircle.png").toString());
 			loadingCircle = new Image(ClassLoader.getSystemResource("loadingCircle.png").toString(), 200, 200, false, false);
 			state = "loading";
 			for(int i = 0 ; i < 100000 ; i++) {

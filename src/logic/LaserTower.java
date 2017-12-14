@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import sharedObject.RenderableHolder;
 
 public class LaserTower extends Tower{
@@ -61,10 +60,6 @@ public class LaserTower extends Tower{
 		list.add("LASER TOWER");
 		list.add("attack level : " + (int)this.attackLevel);
 		return list;
-	}
-	
-	public int getZ() {
-		return 6;
 	}
 	
 	public int getUpgradeAttackPrice(int upgradelevel) {

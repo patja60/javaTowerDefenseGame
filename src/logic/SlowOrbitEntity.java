@@ -1,25 +1,15 @@
 package logic;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
-
-import com.sun.javafx.image.AlphaType;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
-import sharedObject.RenderableHolder;
 
 public class SlowOrbitEntity extends OrbitEntity{
-	int deg;
-	double x1;
-	double y1;
+	private int deg;
+	private double x1;
+	private double y1;
 	private int dimension;
 	private double slow;
 	

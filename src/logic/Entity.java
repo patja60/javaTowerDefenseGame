@@ -23,5 +23,10 @@ public abstract class Entity implements IRenderable{
 	public boolean isVisible() {
 		return visible;
 	}
+	
+	@Override
+	public int getZ() {
+		return z;
+	}
 
 }

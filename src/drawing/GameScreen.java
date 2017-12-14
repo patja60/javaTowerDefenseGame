@@ -14,13 +14,26 @@ import sharedObject.RenderableHolder;
 
 public class GameScreen extends Canvas{
 	private GameLogic gameLogic;
-	//private Menu menu;
 	
 	public GameScreen(double width, double height,GameLogic gameLogic) {
 		super(width,height);
 		this.setVisible(true);
 		this.gameLogic = gameLogic;
 		addListerner();
+	}
+	
+	public void paintComponent() {
+		GraphicsContext gc = this.getGraphicsContext2D();
+		for(IRenderable entity : RenderableHolder.getInstance().getEntities()) {
+			if(entity.isVisible() && !entity.isDestroyed() && !gameLogic.isPause()) {
+				entity.draw(gc);
+			}
+		}
+		gameLogic.getSpawn().draw(gc);
+		
+		if (gameLogic.isGameOver()) {
+			gc.drawImage(RenderableHolder.gameOver, 400-225, 250-60);
+		}
 	}
 	
 	public void addListerner() {
@@ -65,19 +78,5 @@ public class GameScreen extends Canvas{
 				InputUtility.mouseY = event.getY();
 			}
 		});
-	}
-	
-	public void paintComponent() {
-		GraphicsContext gc = this.getGraphicsContext2D();
-		for(IRenderable entity : RenderableHolder.getInstance().getEntities()) {
-			if(entity.isVisible() && !entity.isDestroyed() && !gameLogic.isPause()) {
-				entity.draw(gc);
-			}
-		}
-		gameLogic.getSpawn().draw(gc);
-		
-		if (gameLogic.isGameOver()) {
-			gc.drawImage(RenderableHolder.gameOver, 400-225, 250-60);
-		}
 	}
 }

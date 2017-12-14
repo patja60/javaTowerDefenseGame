@@ -1,24 +1,20 @@
 package logic;
 
-import input.CollidableEntity;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
+import input.OverridableEntity;
 
-public abstract class OrbitEntity extends CollidableEntity{
+public abstract class OrbitEntity extends OverridableEntity{
 	
 	protected int orbitRange;
 	protected int damage;
 	protected double angle;
 	protected double locationX;
 	protected double locationY;
+	protected int z = 7;
 	
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}
-	
-	public int getZ() {
-		return 7;
-	}
+
 	
 	
 }
