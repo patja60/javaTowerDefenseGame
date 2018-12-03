@@ -23,7 +23,7 @@ public class InfoWindow extends Canvas{
 	public InfoWindow(int width, int height, GameLogic gameLogic) {
 		super(width,height);
 		this.gameLogic = gameLogic;
-		
+		addListerner();
 	}
 	
 	public void paintComponent() {
